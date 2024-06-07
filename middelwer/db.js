@@ -1,25 +1,23 @@
-
 const express = require('express');
-const mysql = require('mysql');
+const { Pool } = require('pg');
 
+// Database connection pool
+const pool = new Pool({
+  user: 'sameer',
+  host: 'dpg-cphik1gl6cac73a1vdeg-a',
+  database: 'ilaundry',
+  password: 'Pa97uXshP4oO6FVldo7d6t5OuNv1nDy7',
+  port: 5432,
+});
 
-// database connection and query promisify
-var conn = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : '',
-    database : 'ilaundry'
+// Promisify query function
+const pgQuery = (qry) => {
+  return new Promise((resolve, reject) => {
+    pool.query(qry, (err, res) => {
+      if (err) return reject(err);
+      resolve(res.rows);
+    });
   });
+};
 
-
-  const mySqlQury =(qry)=>{
-    return new Promise((resolve, reject)=>{
-        conn.query(qry, (err, row)=>{
-            if (err) return reject(err);
-            resolve(row)
-        })
-    }) 
-  } 
-
-  
-  module.exports = {conn, mySqlQury}
+module.exports = { pool, pgQuery };

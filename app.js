@@ -14,21 +14,19 @@ const setTZ = require('set-tz') ;
 
 
 
-
-const PORT = process.env.PORT || 3000;
 conn.connect((err)=>{
     if (err) throw err;
     console.log('DB Connected !!!!');
 })
 
 // Temporary bypass for local development
-app.use((req, res, next) => {
-    if (process.env.NODE_ENV !== 'production') {
-        console.log(`Bypassing subdomain check for hostname: ${req.hostname}`);
-        return next();
-    }
-    next();
-});
+// app.use((req, res, next) => {
+//     if (process.env.NODE_ENV !== 'production') {
+//         console.log(`Bypassing subdomain check for hostname: ${req.hostname}`);
+//         return next();
+//     }
+//     next();
+// });
 
 const loginRouter = require('./routers/login')
 const coustomerRouter = require('./routers/coustomer');
