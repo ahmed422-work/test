@@ -14,11 +14,6 @@ const setTZ = require('set-tz') ;
 
 
 
-conn.connect((err)=>{
-    if (err) throw err;
-    console.log('DB Connected !!!!');
-})
-
 // Temporary bypass for local development
 // app.use((req, res, next) => {
 //     if (process.env.NODE_ENV !== 'production') {
