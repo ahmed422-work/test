@@ -11,6 +11,7 @@ const flash = require('connect-flash');
 var cors = require('cors');
 const nocache = require("nocache");
 const setTZ = require('set-tz') ;
+const port = process.env.PORT || 3000;
 
 
 
@@ -91,6 +92,6 @@ app.use((req, res, next) => {
 
 
 // init port
-app.listen(5000, ()=>{
-    console.log(`server running on port `);
+app.listen(port, ()=>{
+    console.log(`server running on port ${port}`);
 })
