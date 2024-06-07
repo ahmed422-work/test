@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+
+<head>
+    <!-- meta and links start -->
+    <%- include('templet/meta')-%>
+
+        <style>
+
+        </style>
+
+</head>
+
+<body>
+    <%- include('templet/preloder_topbar_sidebar',{titel:"Master Settings"})-%>
+
+        <!--********** Content body start **********-->
+
+        <div class="content-body">
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card ">
+                            
+
+                            <div class="card-body">
+
+                                <div class="shop_form">
+                                    <form class="row align-items-center" action="/tool/setmasterdata" method="post" enctype="multipart/form-data" id="master_setting">
+                                        <div class="row">
+                                            <p>Muilty Store Settings</p>
+                                            <hr>
+                                            <div class="col-md-4">
+                                                <div class="form-check form-switch">
+                                                    <label class="form-check-label mx-1" for="multy">
+                                                        <h4> Single Store or Multi-Store </h4>
+                                                    </label>
+                                                    <input class="form-check-input" type="checkbox" id="multy" name="multy" value="1" <%= masterstore.type == 1 ?  'checked' : '' %>>
+                                                </div>
+                                            </div>
+
+                                            <p class="mt-5"> Auto Approval Settings</p>
+                                            <hr>
+
+                                            
+                                            <div class="col-md-4 mt-5">
+                                                <div class="form-check form-switch">
+                                                    <label class="form-check-label mx-1" for="customer_approved">
+                                                        <h4> Customer Auto Approved </h4>
+                                                    </label>
+                                                    <input class="form-check-input" type="checkbox" id="customer_approved" name="customer_approved" value="1" <%= masterstore.customer_autoapprove == 1 ?  'checked' : '' %>>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 mt-5">
+                                                <div class="form-check form-switch">
+                                                    <label class="form-check-label mx-1" for="store_approved">
+                                                        <h4> Store Auto Approved </h4>
+                                                    </label>
+                                                    <input class="form-check-input" type="checkbox" id="store_approved" name="store_approved" value="1" <%= masterstore.store_autoapprove == 1 ?  'checked' : '' %>>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-4 ">
+                                                <label class="form-label">Default Store Roll</label>
+                                                <select class="default-select form-control wide" name="storeroll">
+                                                    <option value="0" selected >Choose Roll</option>
+                                                    <% roll.forEach(function(data){ %>
+                                                        <option value="<%=data.id %>" <%= masterstore.storeroll == data.id ?  'selected' : '' %> ><%=data.roll%></option>
+                                                    <% }) %>   
+                                                </select>
+                                            </div>
+
+
+                                            <p class="mt-5"> Currency Settings</p>
+                                            <hr>
+                                            <div class="col-md-4 mt-4">
+                                                <label class="form-label">Currency</label>
+                                                <input type="text" class="form-control" name="currency" value="<%= masterstore.currency_symbol%>"
+                                                    placeholder="Enter Currency Symbol">
+                                            </div>
+
+                                            <div class="col-md-6 mt-4">
+                                                <label for="" class="m-3"> </label>
+                                                <div class="form-check form-switch">
+                                                    <label class="form-check-label mx-1" for="Symbol_Placement">
+                                                        <h5> Currency Symbol Placement Right side (Default Left Side)</h5>
+                                                    </label>
+                                                    <input class="form-check-input" type="checkbox" id="Symbol_Placement" name="Symbol_Placement" value="1" <%= masterstore.currency_placement == 1 ?  'checked' : '' %>>
+                                                </div>
+                                            </div>
+
+                                            <p class="mt-5"> Logo Settings</p>
+                                            <hr>
+
+                                            <div class="row mt-4  justify-content-between">
+                                                
+                                                <div class="col-md-4 align-self-end">
+                                                    <label class="form-label">App Name</label>
+                                                    <input type="text" class="form-control" name="appname" value="<%= masterstore.app_name %>"
+                                                        placeholder="Enter App Name">
+                                                </div>
+
+                                                <div class="form-input col-md-4 ">
+                                                    <center>
+                                                    <div class="preview m-3 mt-0">
+                                                        <img id="file-preview" width="180" src="../uploads/<%= masterstore.app_logo %>"
+                                                            alt="image">
+                                                    </div>
+
+                                                    <input class="d-none" type="file" id="logo" name="logo"
+                                                        accept="image/*" onchange="showPreview(event);">
+                                                    <div>
+                                                        <label class="btn btn-primary w-75 mb-0  align-self-end" for="logo"> Logo</label>
+                                                    </div>
+                                                    </center>
+                                                </div>
+
+                                                <div class="form-input col-md-4">
+                                                    <center >
+                                                    <div class="preview m-3 mt-0 mb-3 p-4">
+                                                        <img id="file-favicon" width="100" src="../uploads/<%= masterstore.app_favicon %>"
+                                                            alt="image">
+                                                    </div>
+
+                                                    <input class="d-none" type="file" id="favicon" name="favicon"
+                                                        accept="image/*" onchange="showfavicon(event);">
+                                                    <div class="pt-3">
+                                                        <label class="btn btn-primary w-75 mb-0 align-self-end" for="favicon">Favicon</label>
+                                                    </div>
+                                                    </center>
+                                                </div>
+
+                                               
+
+                                            </div>
+
+                                            <p class="mt-5"> Other Settings</p>
+                                            <hr>
+                                            <div class="col-md-8 mt-4">
+                                                <label class="form-label">Timezone</label>
+                                                <select class="default-select form-control wide" name="timezone"
+                                                    id="timezone" data-id="<%= masterstore.timezone %>">
+                                                    <option value selected disabled>Choose Timezone</option>
+                                                   
+                                                    
+                                                   
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-4 mt-4">
+                                                <label class="form-label">Printer POS</label>
+                                                <select class="default-select form-control wide" name="printer_pos">
+                                                    <option value="0" <%= masterstore.printer == 0 ?  'selected' : '' %>>A4</option>
+                                                    <option value="1" <%= masterstore.printer == 1 ?  'selected' : '' %>>Thermal</option>
+                                                </select>
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="mt-4 d-flex justify-content-end">
+                                            <button type="submit" id="master_setting_submit" class="btn btn-primary btn-lg m-5 px-5">Save Data</button>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+          
+
+                    
+                </div>
+            </div>
+
+
+        </div>
+
+        <!--********** Content body end **********-->
+
+          <!-- <<<<<<<<<alert mode >>>>>>>>>>> -->
+            <div class="modal fade" id="multy_alert">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">   
+                    </div>
+
+                </div>
+
+            </div>
+
+             <!-- Modal coupon -->
+             <div class="modal fade" id="POS_coupon_model">
+                <div class="modal-dialog" role="document">
+                    <div class="card">
+                    
+                            <div class="alert alert-primary notification mb-0">
+                                <p class="notificaiton-title mb-2"><strong>Confirmation!</strong> </p>
+                                <p>Are you sure you want to switch Multi Store/Branch to Single?</p>
+                                <p>Note: All customer data move to the default first store if you switch.</p>
+                                <button class="btn btn-primary btn-sm" id="multy_confirm">Confirm</button>
+                                <button class="btn btn-link btn-sm" id="multy_cancel">Cancel</button>
+                            </div> 
+                  
+                    </div>
+                        
+                 
+                </div>
+            </div>
+
+        </div>
+        <!--**********************************
+            Footer start
+        ***********************************-->
+        <div class="footer">
+            <div class="copyright">
+                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">KMS</a> 2023</p>
+            </div>
+        </div>
+        <!--**********************************
+            Footer end
+        ***********************************-->
+
+        </div>
+
+        <!--********** Main wrapper end **********-->
+        <%- include('templet/script')-%>
+           
+           
+           
+
+</body>
+
+</html>

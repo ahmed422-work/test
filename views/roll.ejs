@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+
+<head>
+    <!-- meta and links start -->
+    <%- include('templet/meta')-%>
+
+</head>
+
+<body>
+    <%- include('templet/preloder_topbar_sidebar',{titel:"Role"})-%>
+
+        <!--********** Content body start **********-->
+
+        <div class="content-body">
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card ">
+                            <div class="card-header">
+                                <h3 class="card-title">Role List</h3>
+                                <button class="btn btn-rounded btn-primary <%= accessdata.logas == 'master' || accessdata.roll.rollaccess.includes('write') ?'':'d-none' %>" data-bs-toggle="modal"
+                                    data-bs-target="#roll_list"><span class="btn-icon-start text-primary"><i
+                                            class="fa fa-plus color-info"></i></span>Add New Role</button>
+                            </div>
+                            <div class="card-body ">
+                                <div class="table-responsive">
+                                    <table id="example3" class="display table-responsive-lg">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Role Name</th>
+                                                <th class="<%= ismulty ? '': 'd-none' %>">Store Name </th>
+                                                <th>Role Status</th>
+                                                <th class="<%= accessdata.logas == 'master' || accessdata.roll.rollaccess.includes('edit') || accessdata.roll.rollaccess.includes('delete') ?'':'d-none' %>">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% rollList.forEach(function(data, i){ %>
+                                                <tr>
+                                                    <td> <%= i + 1%> </td>
+                                                    <td> <%= data.roll%>  </td>
+                                                    <td class="<%= ismulty ? '': 'd-none' %>"><%=data.store %></td>
+                                                    <td><% if (data.delet_flage == 0) { %>
+                                                        <span class="badge light badge-secondary">Active</span>
+                                                        <% } else { %>
+                                                            <span class="badge light badge-danger">Deactive</span>
+                                                        <% } %> 
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" class="btn btn-primary shadow sharp me-1 <%= accessdata.logas == 'master' || accessdata.roll.rollaccess.includes('edit') ?'':'d-none' %>" id="updateroll"
+                                                            data-bs-toggle="modal" data-bs-target="#roll_list_update" data-id="<%= data.id%>">
+                                                            <i class="fas fa-pencil-alt"></i></a>
+    
+                                                        <a href="/tool/deletroll/<%= data.id %>" class="btn btn-danger shadow sharp me-1 <%= accessdata.logas == 'master' ||accessdata.roll.rollaccess.includes('delete') ?'':'d-none' %>" id="delete">
+                                                            <i class="fa fa-trash"></i></a>
+                                                    </td>
+                                                </tr>
+                                            <% }) %>
+                                            
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!--********** Content body end **********-->
+
+        <!-- Modal update -->
+        <div class="modal fade" id="roll_list_update">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Role List</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/coustomer/update/" id="updateroll_form" method="post" class="need-validation">
+
+                            <div class="row g-1 align-items-center">
+                                <div class="form-group">
+                                    <label><strong>Name</strong><span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="name_update" name="name_update" placeholder="Enter Name"
+                                        required>
+                                </div>
+
+                               
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Orders</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="update_orders_read" name="orders"
+                                                value="read">
+                                            <label class="form-check-label" for="update_orders_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_orders_write" name="orders"
+                                                value="write">
+                                            <label class="form-check-label" for="update_orders_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_orders_edit" name="orders"
+                                                value="edit">
+                                            <label class="form-check-label" for="update_orders_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_orders_delete"
+                                                name="orders" value="delete">
+                                            <label class="form-check-label" for="update_orders_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Expense</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="update_expense_read"
+                                                name="expense" value="read">
+                                            <label class="form-check-label" for="update_expense_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_expense_write"
+                                                name="expense" value="write">
+                                            <label class="form-check-label" for="update_expense_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_expense_edit"
+                                                name="expense" value="edit">
+                                            <label class="form-check-label" for="update_expense_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_expense_delete"
+                                                name="expense" value="delete">
+                                            <label class="form-check-label" for="update_expense_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Service</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="update_service_read"
+                                                name="service" value="read">
+                                            <label class="form-check-label" for="update_service_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_service_write"
+                                                name="service" value="write">
+                                            <label class="form-check-label" for="update_service_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_service_edit"
+                                                name="service" value="edit">
+                                            <label class="form-check-label" for="update_service_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_service_delete"
+                                                name="service" value="delete">
+                                            <label class="form-check-label" for="update_service_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Reports</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="update_reports_read"
+                                                name="reports" value="read">
+                                            <label class="form-check-label" for="update_reports_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_reports_write"
+                                                name="reports" value="write">
+                                            <label class="form-check-label" for="update_reports_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_reports_edit"
+                                                name="reports" value="edit">
+                                            <label class="form-check-label" for="update_reports_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_reports_delete"
+                                                name="reports" value="delete">
+                                            <label class="form-check-label" for="update_reports_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Tools</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="update_tools_read" name="tools"
+                                                value="read">
+                                            <label class="form-check-label" for="update_tools_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_tools_write" name="tools"
+                                                value="write">
+                                            <label class="form-check-label" for="update_tools_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_tools_edit" name="tools"
+                                                value="edit">
+                                            <label class="form-check-label" for="update_tools_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_tools_delete" name="tools"
+                                                value="delete">
+                                            <label class="form-check-label" for="update_tools_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Mail</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="update_mail_read" name="mail"
+                                                value="read">
+                                            <label class="form-check-label" for="update_mail_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_mail_write" name="mail"
+                                                value="write">
+                                            <label class="form-check-label" for="update_mail_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_mail_edit" name="mail"
+                                                value="edit">
+                                            <label class="form-check-label" for="update_mail_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_mail_delete" name="mail"
+                                                value="delete">
+                                            <label class="form-check-label" for="update_mail_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Store Setting</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="update_master_read" name="master"
+                                                value="read">
+                                            <label class="form-check-label" for="update_master_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_master_write" name="master"
+                                                value="write">
+                                            <label class="form-check-label" for="update_master_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_master_edit" name="master"
+                                                value="edit">
+                                            <label class="form-check-label" for="update_master_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_master_delete"
+                                                name="master" value="delete">
+                                            <label class="form-check-label" for="update_master_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>SMS</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="update_sms_read" name="sms"
+                                                value="read">
+                                            <label class="form-check-label" for="update_sms_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_sms_write" name="sms"
+                                                value="write">
+                                            <label class="form-check-label" for="update_sms_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_sms_edit" name="sms"
+                                                value="edit">
+                                            <label class="form-check-label" for="update_sms_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_sms_delete" name="sms"
+                                                value="delete">
+                                            <label class="form-check-label" for="update_sms_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Coupon</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="update_coupon_read" name="couponname"
+                                                value="read">
+                                            <label class="form-check-label" for="update_coupon_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_coupon_write" name="couponname"
+                                                value="write">
+                                            <label class="form-check-label" for="update_coupon_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_coupon_edit" name="couponname"
+                                                value="edit">
+                                            <label class="form-check-label" for="update_coupon_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_coupon_delete" name="couponname"
+                                                value="delete">
+                                            <label class="form-check-label" for="update_coupon_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Account</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="update_account_read" name="accountname"
+                                                value="read">
+                                            <label class="form-check-label" for="update_account_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_account_write" name="accountname"
+                                                value="write">
+                                            <label class="form-check-label" for="update_account_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_account_edit" name="accountname"
+                                                value="edit">
+                                            <label class="form-check-label" for="update_account_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_account_delete" name="accountname"
+                                                value="delete">
+                                            <label class="form-check-label" for="update_account_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Staff</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="update_staff_read" name="staff"
+                                                value="read">
+                                            <label class="form-check-label" for="update_staff_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_staff_write" name="staff"
+                                                value="write">
+                                            <label class="form-check-label" for="update_staff_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_staff_edit" name="staff"
+                                                value="edit">
+                                            <label class="form-check-label" for="update_staff_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_staff_delete" name="staff"
+                                                value="delete">
+                                            <label class="form-check-label" for="update_staff_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>POS</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="update_pos_read" name="pos"
+                                                value="read">
+                                            <label class="form-check-label" for="update_pos_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_pos_write" name="pos"
+                                                value="write">
+                                            <label class="form-check-label" for="update_pos_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_pos_edit" name="pos"
+                                                value="edit">
+                                            <label class="form-check-label" for="update_pos_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_pos_delete" name="pos"
+                                                value="delete">
+                                            <label class="form-check-label" for="update_pos_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Roll</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="update_roll_read" name="rollname"
+                                                value="read">
+                                            <label class="form-check-label" for="update_roll_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_roll_write" name="rollname"
+                                                value="write">
+                                            <label class="form-check-label" for="update_roll_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_roll_edit" name="rollname"
+                                                value="edit">
+                                            <label class="form-check-label" for="update_roll_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="update_roll_delete" name="rollname"
+                                                value="delete">
+                                            <label class="form-check-label" for="update_roll_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="rollactive" name="active" value="0" >
+                                    <label class="form-check-label"
+                                        for="employee">Is Active ?</label>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-secondary"
+                                    data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-sm  btn-primary">Save</button>
+                            </div>
+                        </form>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal add -->
+        <div class="modal fade" id="roll_list">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Roll List</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form action="/tool/addroll" method="post" class="need-validation">
+                        <div class="modal-body">
+
+                            <div class="row g-1 align-items-center">
+                                <div class="col-md-12 mb-1 <%= ismulty ? '': 'd-none' %>">
+                                    <div class="form-group">
+                                        <label class="form-label"><strong> Store List</strong><span class="text-danger">*</span></label>
+                                        <select class="default-select form-control wide mb-3" name="storeid" >
+                                            <option value="" selected disabled > Select Store </option>
+                                            <% storeList.forEach(function(x){ %>
+                                                <option value="<%= x.id %>"><%= x.name %></option>
+                                            <% }) %>
+                                            
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label><strong>Name</strong><span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control " id="name" name="name" placeholder="Enter Name"
+                                        required>
+                                </div>
+
+                                
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Orders</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="orders_read" name="orders"
+                                                value="read">
+                                            <label class="form-check-label" for="orders_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="orders_write" name="orders"
+                                                value="write">
+                                            <label class="form-check-label" for="orders_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="orders_edit" name="orders"
+                                                value="edit">
+                                            <label class="form-check-label" for="orders_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="orders_delete"
+                                                name="orders" value="delete">
+                                            <label class="form-check-label" for="orders_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Expense</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="expense_read"
+                                                name="expense" value="read">
+                                            <label class="form-check-label" for="expense_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="expense_write"
+                                                name="expense" value="write">
+                                            <label class="form-check-label" for="expense_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="expense_edit"
+                                                name="expense" value="edit">
+                                            <label class="form-check-label" for="expense_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="expense_delete"
+                                                name="expense" value="delete">
+                                            <label class="form-check-label" for="expense_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Service</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="service_read"
+                                                name="service" value="read">
+                                            <label class="form-check-label" for="service_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="service_write"
+                                                name="service" value="write">
+                                            <label class="form-check-label" for="service_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="service_edit"
+                                                name="service" value="edit">
+                                            <label class="form-check-label" for="service_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="service_delete"
+                                                name="service" value="delete">
+                                            <label class="form-check-label" for="service_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Reports</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="reports_read"
+                                                name="reports" value="read">
+                                            <label class="form-check-label" for="reports_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="reports_write"
+                                                name="reports" value="write">
+                                            <label class="form-check-label" for="reports_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="reports_edit"
+                                                name="reports" value="edit">
+                                            <label class="form-check-label" for="reports_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="reports_delete"
+                                                name="reports" value="delete">
+                                            <label class="form-check-label" for="reports_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Tools</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="tools_read" name="tools"
+                                                value="read">
+                                            <label class="form-check-label" for="tools_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="tools_write" name="tools"
+                                                value="write">
+                                            <label class="form-check-label" for="tools_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="tools_edit" name="tools"
+                                                value="edit">
+                                            <label class="form-check-label" for="tools_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="tools_delete" name="tools"
+                                                value="delete">
+                                            <label class="form-check-label" for="tools_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Mail</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="mail_read" name="mail"
+                                                value="read">
+                                            <label class="form-check-label" for="mail_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="mail_write" name="mail"
+                                                value="write">
+                                            <label class="form-check-label" for="mail_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="mail_edit" name="mail"
+                                                value="edit">
+                                            <label class="form-check-label" for="mail_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="mail_delete" name="mail"
+                                                value="delete">
+                                            <label class="form-check-label" for="mail_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Store Setting</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="master_read" name="master"
+                                                value="read">
+                                            <label class="form-check-label" for="master_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="master_write" name="master"
+                                                value="write">
+                                            <label class="form-check-label" for="master_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="master_edit" name="master"
+                                                value="edit">
+                                            <label class="form-check-label" for="master_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="master_delete"
+                                                name="master" value="delete">
+                                            <label class="form-check-label" for="master_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>SMS</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="sms_read" name="sms"
+                                                value="read">
+                                            <label class="form-check-label" for="sms_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="sms_write" name="sms"
+                                                value="write">
+                                            <label class="form-check-label" for="sms_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="sms_edit" name="sms"
+                                                value="edit">
+                                            <label class="form-check-label" for="sms_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="sms_delete" name="sms"
+                                                value="delete">
+                                            <label class="form-check-label" for="sms_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div> -->
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Coupon</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="coupon_read" name="couponname"
+                                                value="read">
+                                            <label class="form-check-label" for="coupon_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="coupon_write" name="couponname"
+                                                value="write">
+                                            <label class="form-check-label" for="coupon_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="coupon_edit" name="couponname"
+                                                value="edit">
+                                            <label class="form-check-label" for="coupon_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="coupon_delete" name="couponname"
+                                                value="delete">
+                                            <label class="form-check-label" for="coupon_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Account</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="account_read" name="accountname"
+                                                value="read">
+                                            <label class="form-check-label" for="account_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="account_write" name="accountname"
+                                                value="write">
+                                            <label class="form-check-label" for="account_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="account_edit" name="accountname"
+                                                value="edit">
+                                            <label class="form-check-label" for="account_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="account_delete" name="accountname"
+                                                value="delete">
+                                            <label class="form-check-label" for="account_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Staff</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="staff_read" name="staff"
+                                                value="read">
+                                            <label class="form-check-label" for="staff_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="staff_write" name="staff"
+                                                value="write">
+                                            <label class="form-check-label" for="staff_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="staff_edit" name="staff"
+                                                value="edit">
+                                            <label class="form-check-label" for="staff_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="staff_delete" name="staff"
+                                                value="delete">
+                                            <label class="form-check-label" for="staff_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>POS</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="pos_read" name="pos"
+                                                value="read">
+                                            <label class="form-check-label" for="pos_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="pos_write" name="pos"
+                                                value="write">
+                                            <label class="form-check-label" for="pos_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="pos_edit" name="pos"
+                                                value="edit">
+                                            <label class="form-check-label" for="pos_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="pos_delete" name="pos"
+                                                value="delete">
+                                            <label class="form-check-label" for="pos_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label class="form-label col-2"><strong>Role</strong></label>
+                                        <div class="form-check col-2 ms-4">
+                                            <input class="form-check-input" type="checkbox" id="roll_read" name="rollname"
+                                                value="read">
+                                            <label class="form-check-label" for="roll_read">Read</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="roll_write" name="rollname"
+                                                value="write">
+                                            <label class="form-check-label" for="roll_write">Write</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="roll_edit" name="rollname"
+                                                value="edit">
+                                            <label class="form-check-label" for="roll_edit">Edit</label>
+                                        </div>
+                                        <div class="form-check col-2 ms-2">
+                                            <input class="form-check-input" type="checkbox" id="roll_delete" name="rollname"
+                                                value="delete">
+                                            <label class="form-check-label" for="roll_delete">Delete</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-secondary"
+                                data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-sm  btn-primary">Save</button>
+                        </div>
+                    </form>
+
+
+                </div>
+
+            </div>
+        </div>
+
+        </div>
+        <!--**********************************
+            Footer start
+        ***********************************-->
+        <div class="footer">
+            <div class="copyright">
+                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">KMS</a> 2023</p>
+            </div>
+        </div>
+        <!--**********************************
+            Footer end
+        ***********************************-->
+
+        </div>
+
+        <!--********** Main wrapper end **********-->
+        <%- include('templet/script')-%>
+            
+
+</body>
+
+
+</html>

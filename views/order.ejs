@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+    <!-- meta and links start -->
+    <%- include('templet/meta')-%>
+</head>
+
+<body>
+    <%- include('templet/preloder_topbar_sidebar',{titel:"Orders"})-%>
+
+        <!--********** Content body start **********-->
+
+        <div class="content-body">
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card ">
+                            <div class="card-header">
+                                <h3 class="card-title">Order List</h3>
+                                <a href="/admin/pos"><button class="btn btn-rounded btn-primary"><span class="btn-icon-start text-primary"><i
+                                    class="fa fa-plus color-info"></i></span>Add New Orders </button></a>
+                            </div>
+                            <div class="d-none">
+                                <input type="hiden" name="sym" value="<%= accessdata.symbol %>">
+                                <input type="hiden" name="pls" value="<%= accessdata.plac %>">
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <!-- <label class="form-label">Start Date</label> -->
+                                        <input type="text" class="form-control" id="order_list_serach" placeholder="Search By Order ID">
+                                    </div>
+
+                                    <div class="col-4">
+                                        <!-- <label class="form-label">Filter</label> -->
+                                        <select class="default-select form-control wide mb-3" name="orders" id="orders_list_status">
+                                            <option value="" selected >All Orders</option>
+                                            <% Ordersatus.forEach(function (data){ %>
+                                                <option value="<%=data.status %>"><%=data.status %></option>
+                                            <% }) %>
+                                           
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <!-- <div class="card-body"> -->
+                                    <div class="tableFixHead">
+                                        <div class="table-responsive">
+                                            <table class="table table-responsive-sm">
+                                                <thead class="table_head">
+                                                    <tr>
+                                                        <th>Order Info</th>
+                                                        <th>Customer</th>
+                                                        <th>Order Amount</th>
+                                                        <th>Status</th>
+                                                        <th>Payment</th>
+                                                        <th class="<%= login === 'master'? '': 'd-none' %> ">Store Name</th>
+                                                        <th>View</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="order_list_tbl">
+                                                    <% if(orderlist.length < 1){ %>
+                                                        <div class="p-2 center">
+                                                            <div class="card">
+                                                                <div class="card-body p-2 ">
+                                                                     <h3 class="text-center text-danger">No Order List Found</h3> 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                   <% } %>
+                                                    <% orderlist.forEach(function(data){ %>
+                                                        <tr>
+                                                            <td>
+                                                                <p class="text-sm mb-0 text-nowrap">
+                                                                    <span class="me-1">Order ID:</span>
+                                                                    <span><%=data.order_id %></span>
+                                                                </p>
+                                                                <p class="text-sm mb-0 text-nowrap">
+                                                                    <span class="me-1">Order Date:</span>
+                                                                    <span><%=data.order_date.toLocaleDateString('en-CA') %></span>
+                                                                </p>
+                                                                <p class="text-sm mb-0 text-nowrap">
+                                                                    <span class="me-1">Delivery Date:</span>
+                                                                    <span><%=data.delivery_date.toLocaleDateString('en-CA') %></span>
+                                                                </p>
+                                                            </td>
+    
+                                                            <td>
+                                                                <p class="text-sm px-2 mb-0 text-nowrap"><%=data.name %></p>
+                                                                <p class="text-sm px-2 mb-0"><%=data.number %></p>
+                                                            </td>
+    
+                                                            <td>
+                                                                <p class="text-sm px-2 mb-0 text-nowrap symbol"><%=data.gross_total %></p>
+                                                            </td>
+    
+                                                            <td>
+                                                                <% if(data.order_status == 1){ %>
+                                                                    <button type="button" class="btn btn-dark btn-xxs text-nowrap" disabled><%=data.orderStatus %></button>
+                                                                <% }else if(data.order_status == 2){ %>
+                                                                    <button type="button" class="btn btn-warning btn-xxs text-nowrap" disabled><%=data.orderStatus %></button>
+                                                                <% }else if(data.order_status == 3){ %>
+                                                                    <button type="button" class="btn btn-secondary btn-xxs text-nowrap" disabled><%=data.orderStatus %></button>
+                                                                <% }else if(data.order_status == 4){ %>
+                                                                    <button type="button" class="btn btn-info btn-xxs text-nowrap" disabled><%=data.orderStatus %></button>
+                                                                <% }else if(data.order_status == 5){ %>
+                                                                    <button type="button" class="btn btn-danger btn-xxs text-nowrap" disabled><%=data.orderStatus %></button>
+                                                                <% } %>
+                                                               
+                                                            </td>
+    
+                                                            <td>
+                                                                <p class="text-sm mb-0 text-nowrap">
+                                                                    <span class="me-2">Total Amount:</span>
+                                                                    <span class="symbol"> <%=data.gross_total %></span>
+                                                                </p>
+                                                                <p class="text-sm mb-1 text-nowrap">
+                                                                    <span class="me-2">Paid Amount:</span>
+    
+                                                                    <span class="symbol"> <%=data.paid_amount %></span>
+                                                                </p>
+    
+                                                                <% if(data.balance_amount > 0){ %>
+                                                                    <% if(accessdata.logas == 'custmor'){ %>
+                                                                        <button  type="button" class="btn light  btn-info btn-xxs mb-2" disabled> Pending</button>
+                                                                    <% }else{ %>
+                                                                        <button  onclick="open_patment_model('<%=data.id %>')"
+                                                                            type="button" class="btn light btn-success btn-xxs mb-2" <%= accessdata.roll.orders.includes('edit') ?'':'disabled' %>>
+                                                                            Add Payment</button>
+                                                                    <% } %>
+                                                                    
+                                                                <% }else{ %>
+                                                                    <button 
+                                                                    type="button" class="btn btn-dark btn-xxs mb-2" disabled>
+                                                                    Fully Paid </button>
+                                                                <% } %>
+                                                                
+    
+                                                            </td>
+    
+                                                            <td class="<%= login === 'master'? '': 'd-none' %> ">
+                                                                <p class="text-sm mb-0 text-uppercase"> <%=data.storeName %></p>
+                                                            </td>
+    
+                                                            <td>
+                                                                <a href="/order/view/<%=data.id %>" type="button" class="btn light btn-info btn-xs">
+                                                                    View
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    <% }) %>
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <!-- </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!--********** Content body end **********-->
+
+        <!-- Modal add Payment -->
+        <div class="modal fade" id="addpaymentmodel1">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Service Type</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <form id="add_order_payment" method="post" class="need-validation">
+                        <div class="modal-body" id="orderlistpaymentmodel">
+                            <div class="row g-2 align-items-center">
+                                <div class=" col-12">
+
+                                    <div class="row mb-50 align-items-center">
+                                        <div class="col text-sm">Customer Name:</div>
+                                        <div class="col-auto text-sm">saitest</div>
+                                    </div>
+
+                                    <div class="row mb-50 align-items-center">
+                                        <div class="col text-sm">Order ID: </div>
+                                        <div class="col-auto text-sm">ORD-2169</div>
+                                    </div>
+
+                                    <div class="row mb-50 align-items-center">
+                                        <div class="col text-sm">Order Date: </div>
+                                        <div class="col-auto text-sm">07/01/2023</div>
+                                    </div>
+
+                                    <div class="row mb-50 align-items-center">
+                                        <div class="col text-sm"> Delivery Date:</div>
+                                        <div class="col-auto text-sm">07/01/2023</div>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="row mb-50 align-items-center">
+                                        <div class="col text-sm"> Order Amount:</div>
+                                        <div class="col-auto text-sm"></div>
+                                    </div>
+
+                                    <div class="row mb-50 align-items-center">
+                                        <div class="col text-sm">Paid Amount:</div>
+                                        <div class="col-auto text-sm"></div>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="row align-items-center">
+                                        <div class="col text-sm">Balance:</div>
+                                        <div class="col-auto text-sm"></div>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="row align-items-center">
+                                        <div class="col-md-6 mb-1">
+                                            <label class="form-label">Paid Amount</label>
+                                            <input type="number" class="form-control" placeholder="Enter Amount">
+                                        </div>
+                                        <div class="col-md-6 mb-1">
+                                            <label class="form-label">Payment Type</label>
+                                            <select class="default-select form-control wide" name="payment"
+                                                id="payment">
+                                                <option value selected disabled>Choose Payment Type</option>
+                                                <option value="cash">Cash</option>
+                                                <option value="upi">UPI</option>
+                                                <option value="card">Card</option>
+                                                <option value="cheque">Cheque</option>
+                                                <option value="bank_transfer">Bank Transfer</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" value="submit"  class="btn btn-primary" id="add_order_payment_submit">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal add Payment end-->
+
+        </div>
+        <!--**********************************
+            Footer start
+        ***********************************-->
+        <div class="footer">
+            <div class="copyright">
+                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">KMS</a> 2023</p>
+            </div>
+        </div>
+        <!--**********************************
+            Footer end
+        ***********************************-->
+
+        </div>
+
+        <!--********** Main wrapper end **********-->
+        <%- include('templet/script')-%>
+          
+
+            
+
+</body>
+
+
+</html>

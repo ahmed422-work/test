@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+    <!-- meta and links start -->
+    <%- include('templet/meta')-%>
+      
+</head>
+
+<body>
+    <%- include('templet/preloder_topbar_sidebar',{titel:"Report"})-%>
+
+        <!--********** Content body start **********-->
+
+        <div class="content-body">
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card ">
+                            <div class="card-header justify-content-between">
+                                <h3 class="card-title">Expence Report</h3>
+                                
+                            </div>
+                            <div class="d-none">
+                                <input type="hiden" name="sym" value="<%= accessdata.symbol %>">
+                                <input type="hiden" name="pls" value="<%= accessdata.plac %>">
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label class="form-label">Start Date</label>
+                                        <input type="date" class="form-control" name="start_date" id="Expence_report_start_date">
+                                    </div>
+
+                                    <div class="col-4">
+                                        <label class="form-label">End Date</label>
+                                        <input type="date" class="form-control" name="end_date" id="Expence_report_end_date">
+                                    </div>
+                                    <div class="form-group m-0 col-4 <%= accessdata.logas == 'master' && accessdata.mutibranch  ? '' :'d-none' %>">
+                                        <label class="form-label">Store Name</label>
+                                        <select class="default-select form-control wide " name="storeid"
+                                            id="Expence_report_store" >
+                                            <% storeList.forEach(function(x){ %>
+                                                <option value="<%= x.id %>" <%= x.id == store ? 'selected' :'' %> ><%= x.name %></option>
+                                            <% }) %>
+                                        </select>
+    
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="card-body">
+                                        <div class="table-responsive " id="invoice_page">
+                                            <div class="tableFixHead">
+                                                <table class="table table-responsive-sm" >
+                                                    <thead class="table_head">
+                                                       
+                                                        <tr>
+                                                            <th>DATE</th>
+                                                            <th>TOWARDS</th>
+                                                            <th>EXPENSE AMOUNT</th>
+                                                            <th>TAX%</th>
+                                                            <th>TAX AMOUNT</th>
+                                                            <th>PAYMENT MODE</th>
+                                                           
+                                                        </tr>
+                                                     
+                                                    </thead>
+                                                    <tbody id="tb_row_expence_report">
+                                                        <% Expencedata.forEach(function (data){ %> 
+                                                            <tr>
+                                                                <td><%= data.date.toLocaleDateString('en-CA') %></td>
+                                                                <td><%= data.cat_name %></td>
+                                                                <td class="symbol"><%= data.amount.toFixed(2) %></td>
+                                                                <td><%= data.taxpercent %></td>
+                                                                <td class="symbol"><%= data.taxamount.toFixed(2) %></td>
+                                                                <td><%= data.ac_name %></td>    
+                                                            </tr>
+                                                            <% }) %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>Total Expence :-</strong>
+                                        <strong><span id="expence_report">0</span></strong>
+                                    </div>
+                                    <div class="col">
+                                        <strong>Total Expence Amount :- </strong>
+                                        <strong> <span id="expence_report_amount" class="symbol invosymbol">0</span></strong>
+                                    </div>
+                                    <div class="col">
+                                        <strong>Total Tax Amount :- </strong>
+                                        <strong> <span id="expence_report_taxamount" class="symbol invosymbol">0</span></strong>
+                                    </div>
+                                    <div class="col">
+                                       
+                                            <button type="submit" class="btn btn-success" onclick="downloadExpencereport()" id="Download_order_report">Download Report</button>
+                                      
+                                       
+                                            <button type="submit" id="order_report_print" class="btn btn-warning mb-0">Print Report</button>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!--********** Content body end **********-->
+
+        </div>
+        <!--**********************************
+            Footer start
+        ***********************************-->
+        <div class="footer">
+            <div class="copyright">
+                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">KMS</a> 2023</p>
+            </div>
+        </div>
+        <!--**********************************
+            Footer end
+        ***********************************-->
+
+        </div>
+
+        <!--********** Main wrapper end **********-->
+        <%- include('templet/script')-%>
+            
+           
+
+</body>
+
+
+</html>
