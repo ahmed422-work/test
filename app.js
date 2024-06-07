@@ -91,6 +91,6 @@ app.use((req, res, next) => {
 
 
 // init port
-app.listen(PORT, ()=>{
-    console.log(`server running on port ${PORT}`);
+app.listen(5000, ()=>{
+    console.log(`server running on port `);
 })
