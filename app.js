@@ -11,9 +11,15 @@ const flash = require('connect-flash');
 var cors = require('cors');
 const nocache = require("nocache");
 const setTZ = require('set-tz') ;
-const port = process.env.PORT || 3000;
 
 
+
+
+const PORT = process.env.PORT || 3000;
+conn.connect((err)=>{
+    if (err) throw err;
+    console.log('DB Connected !!!!');
+})
 
 // Temporary bypass for local development
 // app.use((req, res, next) => {
@@ -44,10 +50,10 @@ app.use(session({
 
 // set default timeZone
 
-// conn.query("SELECT timezone FROM tbl_master_shop where id=1", (err, row)=>{
-//     if (err)  throw new err;
-//     setTZ(row[0].timezone)
-// })
+conn.query("SELECT timezone FROM tbl_master_shop where id=1", (err, row)=>{
+    if (err)  throw new err;
+    setTZ(row[0].timezone)
+})
 
 
 
@@ -92,6 +98,6 @@ app.use((req, res, next) => {
 
 
 // init port
-app.listen(port, ()=>{
-    console.log(`server running on port ${port}`);
+app.listen(PORT, ()=>{
+    console.log(`server running on port ${PORT}`);
 })
